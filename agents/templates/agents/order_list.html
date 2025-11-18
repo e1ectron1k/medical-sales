@@ -1,0 +1,141 @@
+{% extends 'agents/base.html' %}
+
+{% block title %}Мои заказы{% endblock %}
+
+{% block content %}
+<style>
+    .orders-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .order-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        border-left: 4px solid #207cca;
+    }
+    
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .order-status {
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    
+    .status-draft { background: #ffc107; color: #000; }
+    .status-submitted { background: #17a2b8; color: #fff; }
+    .status-approved { background: #28a745; color: #fff; }
+    .status-completed { background: #6c757d; color: #fff; }
+    
+    .order-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .detail-item {
+        margin-bottom: 5px;
+    }
+    
+    .detail-label {
+        font-weight: bold;
+        color: #666;
+    }
+    
+    .no-orders {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+    
+    .create-order-btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .create-order-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(32, 124, 202, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="orders-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1 style="color: #1e5799; margin: 0;">Мои заказы</h1>
+        <a href="{% url 'create_order' %}" class="create-order-btn">
+            ➕ Создать новый заказ
+        </a>
+    </div>
+    
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-header">
+                <h3 style="margin: 0; color: #1e5799;">Заказ #{{ order.id }}</h3>
+                <span class="order-status status-{{ order.status }}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+            
+            <div class="order-details">
+                <div class="detail-item">
+                    <span class="detail-label">Клиент:</span>
+                    {{ order.customer_name }}
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Телефон:</span>
+                    {{ order.customer_phone }}
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Email:</span>
+                    {{ order.customer_email|default:"Не указан" }}
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Дата создания:</span>
+                    {{ order.created_at|date:"d.m.Y H:i" }}
+                </div>
+            </div>
+            
+            {% if order.notes %}
+            <div class="detail-item">
+                <span class="detail-label">Примечания:</span>
+                {{ order.notes }}
+            </div>
+            {% endif %}
+            
+            <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
+                <span class="detail-label">Общая сумма:</span>
+                <strong>{{ order.total_amount }} руб.</strong>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-orders">
+            <h3>У вас пока нет заказов</h3>
+            <p>Создайте ваш первый заказ, чтобы он появился здесь</p>
+            <a href="{% url 'create_order' %}" class="create-order-btn">
+                ➕ Создать первый заказ
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

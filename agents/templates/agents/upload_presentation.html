@@ -1,0 +1,32 @@
+{% extends 'agents/base.html' %}
+
+{% block title %}Загрузка презентации{% endblock %}
+
+{% block content %}
+<h1>Загрузка презентации</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div style="margin: 1rem 0;">
+        <label>Название:</label>
+        {{ form.title }}
+    </div>
+    <div style="margin: 1rem 0;">
+        <label>Описание:</label>
+        {{ form.description }}
+    </div>
+    <div style="margin: 1rem 0;">
+        <label>Тип:</label>
+        {{ form.presentation_type }}
+    </div>
+    <div style="margin: 1rem 0;">
+        <label>HTML контент:</label>
+        {{ form.html_content }}
+    </div>
+    <div style="margin: 1rem 0;">
+        <label>Внешняя ссылка:</label>
+        {{ form.external_url }}
+    </div>
+    <button type="submit" class="btn">Сохранить</button>
+</form>
+{% endblock %}

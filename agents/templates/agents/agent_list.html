@@ -1,0 +1,19 @@
+{% extends 'agents/base.html' %}
+
+{% block title %}Агенты{% endblock %}
+
+{% block content %}
+<h1>Список агентов</h1>
+
+{% for agent in agents %}
+<div class="card">
+    <h3>{{ agent.user.get_full_name }}</h3>
+    <p>Телефон: {{ agent.phone }}</p>
+    <p>Комиссия: {{ agent.commission_rate }}%</p>
+    <p>Статус: {{ agent.get_status_display }}</p>
+    <a href="{% url 'agent_detail' agent.id %}" class="btn">Подробнее</a>
+</div>
+{% empty %}
+<p>Агенты пока не добавлены</p>
+{% endfor %}
+{% endblock %}

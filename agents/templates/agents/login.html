@@ -1,0 +1,25 @@
+{% extends 'agents/base.html' %}
+
+{% block title %}Вход в систему{% endblock %}
+
+{% block content %}
+<style>
+    .auth-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="auth-container">
+    <h2 style="text-align: center; margin-bottom: 30px;">Вход в систему</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn" style="width: 100%;">Войти</button>
+    </form>
+</div>
+{% endblock %}

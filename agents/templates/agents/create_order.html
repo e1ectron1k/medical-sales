@@ -1,0 +1,198 @@
+{% extends 'agents/base.html' %}
+
+{% block title %}Создание заказа{% endblock %}
+
+{% block content %}
+<style>
+    .order-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .order-form {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #1e5799;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .form-control:focus {
+        border-color: #207cca;
+        outline: none;
+        box-shadow: 0 0 5px rgba(32, 124, 202, 0.3);
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(32, 124, 202, 0.4);
+    }
+    
+    .email-btn {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-left: 10px;
+    }
+    
+    .email-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .button-group {
+        text-align: center;
+        margin-top: 30px;
+    }
+</style>
+
+<div class="order-container">
+    <h1 style="text-align: center; margin-bottom: 30px; color: #1e5799;">Создание нового заказа</h1>
+    
+    <div class="order-form">
+        <form method="post" id="orderForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.customer_name.id_for_label }}">Организация:</label>
+                {{ form.customer_name }}
+                {% if form.customer_name.errors %}
+                <div style="color: red; font-size: 14px; margin-top: 5px;">
+                    {{ form.customer_name.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.customer_phone.id_for_label }}">Телефон клиента:</label>
+                {{ form.customer_phone }}
+                {% if form.customer_phone.errors %}
+                <div style="color: red; font-size: 14px; margin-top: 5px;">
+                    {{ form.customer_phone.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.customer_email.id_for_label }}">Email клиента:</label>
+                {{ form.customer_email }}
+                {% if form.customer_email.errors %}
+                <div style="color: red; font-size: 14px; margin-top: 5px;">
+                    {{ form.customer_email.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.notes.id_for_label }}">Заказ:</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                <div style="color: red; font-size: 14px; margin-top: 5px;">
+                    {{ form.notes.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="submit-btn">📋 Создать заказ</button>
+                
+                <!-- Кнопка отправки по email -->
+                <button type="button" class="email-btn" onclick="sendOrderByEmail()">
+                    📧 Отправить заказ по почте
+                </button>
+                
+                <div style="margin-top: 15px;">
+                    <a href="{% url 'order_list' %}" style="color: #6c757d; text-decoration: none;">
+                        ← Назад к списку заказов
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function sendOrderByEmail() {
+        // Получаем данные из формы
+        const customerName = document.querySelector('#id_customer_name').value || 'Не указано';
+        const customerPhone = document.querySelector('#id_customer_phone').value || 'Не указан';
+        const customerEmail = document.querySelector('#id_customer_email').value || 'Не указан';
+        const notes = document.querySelector('#id_notes').value || 'Не указан';
+        
+        // Email адрес получателя (замените на нужный)
+        const recipientEmail = 'orders@medtech.ru';
+        
+        // Тема письма
+        const subject = `Новый заказ от агента #{{ user.id }}`;
+        
+        // Текст письма с ID агента
+        const body = `
+    НОВЫЙ ЗАКАЗ
+    
+    Информация об агенте:
+    Агент ID: {{ user.id }}
+    Имя агента: {{ user.username }}
+    {% if user.first_name or user.last_name %}
+    ФИО агента: {{ user.first_name }} {{ user.last_name }}
+    {% endif %}
+    
+    Информация о клиенте:
+    Организация: ${customerName}
+    Телефон: ${customerPhone}
+    Email: ${customerEmail}
+    
+    Детали заказа:
+    ${notes}
+    
+    ---
+    Дата создания: ${new Date().toLocaleString()}
+        `.trim();
+        
+        // Формируем mailto ссылку
+        const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
+        // Открываем почтовый клиент
+        window.location.href = mailtoLink;
+    }
+    </script>
+    
+{% endblock %}

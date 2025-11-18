@@ -1,0 +1,60 @@
+{% extends 'agents/base.html' %}
+
+{% block title %}{{ category_title }} - {{ presentation.title }}{% endblock %}
+
+{% block content %}
+<style>
+    .product-detail {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-left: 4px solid #207cca;
+    }
+    
+    .order-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background 0.3s;
+    }
+    
+    .order-btn:hover {
+        background: #218838;
+    }
+</style>
+
+<div class="presentation-container">
+    <a href="{% url 'presentation_detail' presentation.id %}" class="back-button">← Назад к презентации</a>
+    
+    <div class="presentation-header">
+        <h1>{{ category_title }}</h1>
+        <p>Подробная информация о продукции</p>
+    </div>
+
+    {% for product in products %}
+    <div class="product-detail">
+        <h3>{{ product.name }}</h3>
+        <p><strong>Описание:</strong> {{ product.description }}</p>
+        <p><strong>Модели:</strong> {{ product.models }}</p>
+        <p><strong>Цена:</strong> {{ product.price }}</p>
+        
+        <button class="order-btn" onclick="addToOrder('{{ product.name }}')">
+            📋 Добавить в заказ
+        </button>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function addToOrder(productName) {
+    alert('Товар "' + productName + '" добавлен в заказ');
+    // Здесь будет интеграция с корзиной заказов
+}
+</script>
+{% endblock %}

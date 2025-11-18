@@ -1,0 +1,27 @@
+{% extends 'agents/base.html' %}
+
+{% block title %}Агент: {{ agent.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<h1>Агент: {{ agent.user.get_full_name }}</h1>
+
+<div class="card">
+    <p><strong>Телефон:</strong> {{ agent.phone }}</p>
+    <p><strong>Адрес:</strong> {{ agent.address }}</p>
+    <p><strong>Комиссия:</strong> {{ agent.commission_rate }}%</p>
+    <p><strong>Статус:</strong> {{ agent.get_status_display }}</p>
+    <p><strong>Дата регистрации:</strong> {{ agent.registration_date|date:"d.m.Y" }}</p>
+</div>
+
+<h2>Продажи</h2>
+{% for sale in sales %}
+<div class="card">
+    <p><strong>Оборудование:</strong> {{ sale.product.name }}</p>
+    <p><strong>Клиент:</strong> {{ sale.client_name }}</p>
+    <p><strong>Сумма:</strong> {{ sale.total_amount }} ₽</p>
+    <p><strong>Комиссия:</strong> {{ sale.commission }} ₽</p>
+</div>
+{% empty %}
+<p>Пока нет продаж</p>
+{% endfor %}
+{% endblock %}

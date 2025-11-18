@@ -1,0 +1,28 @@
+{% extends 'agents/base.html' %}
+
+{% block title %}Презентации{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Презентации</h1>
+    
+    <!-- Статическая презентация "О компании" -->
+    <div class="card" style="margin: 20px 0; padding: 20px;">
+        <h3>О компании</h3>
+        <p>Основная информация о нашей компании, направлениях деятельности и преимуществах</p>
+        <a href="/media/presentations/about_company.pdf" class="btn" target="_blank">Открыть презентацию</a>
+    </div>
+
+    {% for presentation in presentations %}
+    <div class="card" style="margin: 20px 0; padding: 20px;">
+        <h3>{{ presentation.title }}</h3>
+        {% if presentation.description %}
+        <p>{{ presentation.description }}</p>
+        {% endif %}
+        <a href="{% url 'presentation_detail' presentation.id %}" class="btn">Открыть презентацию</a>
+    </div>
+    {% empty %}
+    <p>Другие презентации пока не добавлены</p>
+    {% endfor %}
+</div>
+{% endblock %}
