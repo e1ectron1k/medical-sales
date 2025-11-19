@@ -4,15 +4,15 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', DEFAULT='')
+SECRET_KEY = config('SECRET_KEY', default='')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='agets.medtechnics.ru, 87.192.').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='agents.medtechnics.ru,www.agents.medtechnics.ru,217.114.9.153,localhost,127.0.0.1,0.0.0.0').split(',')
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
@@ -61,8 +61,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('DB_NAME', default='medical_sales'),
-        'USER': config('DB_USER', default='medical_user'),
-        'PASSWORD': config('DB_PASSWORD', default='secure_password'),
+        'USER': config('DB_USER', default='e1ectron1k'),
+        'PASSWORD': config('DB_PASSWORD', default='Medtech2006'),
         'HOST': config('DB_HOST', default='localhost'),
         'PORT': config('DB_PORT', default='5432')
     }
